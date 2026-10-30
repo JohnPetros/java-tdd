@@ -20,4 +20,10 @@ class TriangleClassifierTest {
     void classifiesValidEquilateralTriangles(int a, int b, int c) {
         assertEquals(TriangleType.EQUILATERAL, classifier.classify(a, b, c));
     }
+
+    @ParameterizedTest(name = "({0}, {1}, {2}) is isosceles")
+    @CsvSource({"5, 5, 3", "5, 3, 5", "3, 5, 5"})
+    void classifiesEveryIsoscelesPermutation(int a, int b, int c) {
+        assertEquals(TriangleType.ISOSCELES, classifier.classify(a, b, c));
+    }
 }
