@@ -56,4 +56,22 @@ class TriangleClassifierTest {
     void rejectsEveryTriangleInequalityViolationPermutation(int a, int b, int c) {
         assertThrows(IllegalArgumentException.class, () -> classifier.classify(a, b, c));
     }
+
+    @ParameterizedTest(name = "({0}, {1}, {2}) is {3} without integer overflow")
+    @CsvSource({
+        "2147483647, 2147483647, 2147483647, EQUILATERAL",
+        "2147483647, 2147483647, 1, ISOSCELES",
+        "2147483647, 1, 2147483647, ISOSCELES",
+        "1, 2147483647, 2147483647, ISOSCELES",
+        "2147483647, 2147483646, 2147483645, SCALENE"
+    })
+    void classifiesLargeValidSidesWithoutOverflow(int a, int b, int c, TriangleType expected) {
+        assertEquals(expected, classifier.classify(a, b, c));
+    }
+
+    @ParameterizedTest(name = "({0}, {1}, {2}) remains invalid at integer limits")
+    @CsvSource({"2147483647, 1, 1", "1, 2147483647, 1", "1, 1, 2147483647"})
+    void rejectsLargeInvalidSides(int a, int b, int c) {
+        assertThrows(IllegalArgumentException.class, () -> classifier.classify(a, b, c));
+    }
 }
