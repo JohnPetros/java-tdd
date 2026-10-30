@@ -1,5 +1,6 @@
 package com.johnpetros.tdd.person;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -145,6 +146,42 @@ class PersonDAOTest {
             "Email at position 1 must match local@domain.suffix.",
             "Email at position 3 must match local@domain.suffix."
         ), dao.isValidToInclude(person));
+    }
+
+    @Test
+    void rejectsMissingPersonWithoutThrowing() {
+        assertEquals(List.of("Person must be provided."), dao.isValidToInclude(null));
+    }
+
+    @Test
+    void collectsNameAgeAndMissingEmailErrors() {
+        Person person = new Person(1, "Ana", 0, List.of());
+
+        assertEquals(List.of(
+            "Name must contain at least two parts made only of letters.",
+            "Age must be between 1 and 200 inclusive.",
+            "Person must have at least one email."
+        ), dao.isValidToInclude(person));
+    }
+
+    @Test
+    void collectsNameAgeAndEveryEmailError() {
+        Person person = new Person(1, null, 201, Arrays.asList(null, new Email(2, "invalid")));
+
+        assertEquals(List.of(
+            "Name must contain at least two parts made only of letters.",
+            "Age must be between 1 and 200 inclusive.",
+            "Email at position 1 must match local@domain.suffix.",
+            "Email at position 2 must match local@domain.suffix."
+        ), dao.isValidToInclude(person));
+    }
+
+    @Test
+    void doesNotCarryErrorsBetweenValidations() {
+        List<String> firstErrors = dao.isValidToInclude(personWith("Ana", 30));
+
+        assertEquals(List.of(), dao.isValidToInclude(personWith("Ana Silva", 30)));
+        assertEquals(List.of("Name must contain at least two parts made only of letters."), firstErrors);
     }
 
     private Person personWith(String name, int age) {

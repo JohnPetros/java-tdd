@@ -14,6 +14,10 @@ public class PersonDAO {
 
     public List<String> isValidToInclude(Person person) {
         List<String> errors = new ArrayList<>();
+        if (person == null) {
+            errors.add("Person must be provided.");
+            return errors;
+        }
         if (person.name() == null || !NAME_PATTERN.matcher(person.name().strip()).matches()) {
             errors.add("Name must contain at least two parts made only of letters.");
         }
