@@ -4,6 +4,8 @@ Classify three integer side lengths as **scalene** (escaleno), **isosceles**
 (isósceles), or **equilateral** (equilátero), using Java 21, JUnit 5 and Maven.
 JaCoCo measures the production code exercised by the tests.
 
+**Repository:** [github.com/JohnPetros/java-tdd](https://github.com/JohnPetros/java-tdd)
+
 ## Requirements
 
 - JDK **21** or later, with `JAVA_HOME` pointing to the JDK.
@@ -18,6 +20,13 @@ mvn -version
 ```
 
 ## Build and test execution
+
+Get the project:
+
+```sh
+git clone https://github.com/JohnPetros/java-tdd.git
+cd java-tdd
+```
 
 Run these commands from the repository root, where `pom.xml` is located.
 
