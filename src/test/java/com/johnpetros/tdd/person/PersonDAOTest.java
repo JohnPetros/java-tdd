@@ -1,5 +1,6 @@
 package com.johnpetros.tdd.person;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -77,6 +78,73 @@ class PersonDAOTest {
         ));
 
         assertEquals(List.of(), dao.isValidToInclude(person));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "a@b.c", "ana.silva@example.com", "ana+school@example.com",
+        "ana@mail.example.com", "ana@exemplo.com.br"
+    })
+    void acceptsEmailWithNonemptyLocalDomainAndSuffix(String email) {
+        Person person = new Person(1, "Ana Silva", 30, List.of(new Email(1, email)));
+
+        assertEquals(List.of(), dao.isValidToInclude(person));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {
+        "ana.example.com", "ana@example", "@example.com", "ana@.com", "ana@example.",
+        "ana@@example.com", "ana@example@school.com", "ana@exam ple.com",
+        "ana @example.com", " ana@example.com", "ana@example.com ",
+        "ana@example..com", "ana@.example.com", "ana@example.com.",
+        "ana@\texample.com", "ana@\u2003example.com", "a@b.c\n"
+    })
+    void rejectsMalformedEmailNames(String email) {
+        Person person = new Person(1, "Ana Silva", 30, List.of(new Email(1, email)));
+
+        assertEquals(List.of("Email at position 1 must match local@domain.suffix."),
+            dao.isValidToInclude(person));
+    }
+
+    @Test
+    void rejectsNullEmailObject() {
+        Person person = new Person(1, "Ana Silva", 30, Collections.singletonList(null));
+
+        assertEquals(List.of("Email at position 1 must match local@domain.suffix."),
+            dao.isValidToInclude(person));
+    }
+
+    @Test
+    void checksEmailAfterAValidEmail() {
+        Person person = new Person(1, "Ana Silva", 30, List.of(
+            new Email(1, "ana@example.com"), new Email(2, "invalid")
+        ));
+
+        assertEquals(List.of("Email at position 2 must match local@domain.suffix."),
+            dao.isValidToInclude(person));
+    }
+
+    @Test
+    void reportsInvalidEmailEvenWhenAnotherEmailIsValid() {
+        Person person = new Person(1, "Ana Silva", 30, List.of(
+            new Email(1, "invalid"), new Email(2, "ana@example.com")
+        ));
+
+        assertEquals(List.of("Email at position 1 must match local@domain.suffix."),
+            dao.isValidToInclude(person));
+    }
+
+    @Test
+    void reportsEachInvalidEmailInAssociationOrder() {
+        Person person = new Person(1, "Ana Silva", 30, List.of(
+            new Email(1, "invalid"), new Email(2, "ana@example.com"), new Email(3, "also-invalid")
+        ));
+
+        assertEquals(List.of(
+            "Email at position 1 must match local@domain.suffix.",
+            "Email at position 3 must match local@domain.suffix."
+        ), dao.isValidToInclude(person));
     }
 
     private Person personWith(String name, int age) {
