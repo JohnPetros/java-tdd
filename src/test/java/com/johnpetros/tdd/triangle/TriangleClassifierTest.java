@@ -14,4 +14,10 @@ class TriangleClassifierTest {
     void classifiesValidScaleneTriangles(int a, int b, int c) {
         assertEquals(TriangleType.SCALENE, classifier.classify(a, b, c));
     }
+
+    @ParameterizedTest(name = "({0}, {1}, {2}) is equilateral")
+    @CsvSource({"3, 3, 3", "1, 1, 1"})
+    void classifiesValidEquilateralTriangles(int a, int b, int c) {
+        assertEquals(TriangleType.EQUILATERAL, classifier.classify(a, b, c));
+    }
 }
