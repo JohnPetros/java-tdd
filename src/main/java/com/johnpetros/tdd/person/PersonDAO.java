@@ -14,6 +14,9 @@ public class PersonDAO {
         if (person.name() == null || !NAME_PATTERN.matcher(person.name().strip()).matches()) {
             errors.add("Name must contain at least two parts made only of letters.");
         }
+        if (person.age() < 1 || person.age() > 200) {
+            errors.add("Age must be between 1 and 200 inclusive.");
+        }
         return errors;
     }
 }

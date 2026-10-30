@@ -41,6 +41,21 @@ class PersonDAOTest {
         );
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 100, 199, 200})
+    void acceptsAgeWithinInclusiveLimits(int age) {
+        assertEquals(List.of(), dao.isValidToInclude(personWith("Ana Silva", age)));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {Integer.MIN_VALUE, -1, 0, 201, Integer.MAX_VALUE})
+    void rejectsAgeOutsideInclusiveLimits(int age) {
+        assertEquals(
+            List.of("Age must be between 1 and 200 inclusive."),
+            dao.isValidToInclude(personWith("Ana Silva", age))
+        );
+    }
+
     private Person personWith(String name, int age) {
         return new Person(1, name, age, List.of(new Email(1, "ana@example.com")));
     }
