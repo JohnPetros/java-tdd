@@ -1,0 +1,9 @@
+Command: mvn -B clean verify
+[INFO] Tests run: 38, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.321 s -- in com.johnpetros.tdd.triangle.TriangleClassifierTest
+[INFO] Tests run: 51, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.204 s -- in com.johnpetros.tdd.salary.SalaryCalculatorTest
+[INFO] Tests run: 64, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.148 s -- in com.johnpetros.tdd.person.PersonDAOTest
+[INFO] Tests run: 153, Failures: 0, Errors: 0, Skipped: 0
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS
+[INFO] Total time:  1.494 s
+[INFO] Finished at: 2026-10-29T21:57:23-03:00

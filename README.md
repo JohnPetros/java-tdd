@@ -6,6 +6,12 @@ JaCoCo measures the production code exercised by the tests.
 - **Exercise 1:** classify triangle sides as scalene, isosceles, or equilateral.
 - **Exercise 2:** validate a `Person` and its associated `Email` objects through
   `PersonDAO.isValidToInclude`, returning a list of errors.
+- **Exercise 3:** calculate an employee's net salary using the discount for their
+  role and base salary.
+
+The complete suite has **153 passing cases**: 38 for Exercise 1, 64 for Exercise 2,
+and 51 for Exercise 3. All three exercise packages have **100% line and branch
+coverage**.
 
 **Repository:** [github.com/JohnPetros/java-tdd](https://github.com/JohnPetros/java-tdd)
 
@@ -45,12 +51,16 @@ mvn '-Dtest=TriangleClassifierTest#classifiesEveryIsoscelesPermutation' test
 
 # Execute only Exercise 2 tests.
 mvn -Dtest=PersonDAOTest test
+
+# Execute only Exercise 3 tests.
+mvn -Dtest=SalaryCalculatorTest test
 ```
 
 The JAR is generated at `target/java-tdd-1.0.0-SNAPSHOT.jar`. This is a library:
-inputs are supplied through `TriangleClassifier.classify(int a, int b, int c)`
-and `PersonDAO.isValidToInclude(Person person)`. Their behavior is demonstrated
-by the tests. A console application is not required to execute the test suite.
+inputs are supplied through `TriangleClassifier.classify(int a, int b, int c)`,
+`PersonDAO.isValidToInclude(Person person)`, and `SalaryCalculator.calculate(Employee employee)`.
+Their behavior is demonstrated by the tests. A console application is not
+required to execute the test suite.
 
 ## Exercise 1 — behavior
 
@@ -202,8 +212,9 @@ List<String> errors = dao.isValidToInclude(invalid);
 
 ### Exercise 2 code coverage evidence
 
-The full `mvn clean verify` run passes **102 cases**: 38 for Exercise 1 and
-64 for Exercise 2. The Exercise 2 classes have **100% line and branch coverage**.
+The committed Exercise 2 snapshot records a successful `mvn clean verify` run
+with **102 cases**: 38 for Exercise 1 and 64 for Exercise 2, before Exercise 3 was
+added. The Exercise 2 classes have **100% line and branch coverage**.
 See the measured class counters below and the committed build evidence:
 
 | Production class | Instructions | Lines | Branches | Methods |
@@ -223,6 +234,96 @@ from the full build's report. Run `mvn clean verify` and open
 `target/site/jacoco/index.html`, then select that package to inspect Exercise 2.
 As with Exercise 1, the measurements cover production code exercised by the
 complete suite, and the build enforces 100% line and branch coverage.
+
+## Exercise 3 — salary calculator
+
+`Employee` is a Java record containing `String name`, `String email`,
+`BigDecimal baseSalary`, and `Role role`. `SalaryCalculator.calculate(Employee)`
+returns the employee's net salary. Names and email addresses are stored as
+employee information; salary calculations depend on the base salary and role.
+
+The discount applies to the **entire base salary**, according to the assignment:
+
+| Role | Assignment name | Threshold | Discount below threshold | Discount at or above threshold |
+| --- | --- | --- | --- | --- |
+| `DEVELOPER` | DESENVOLVEDOR | 3000.00 | 10% | 20% |
+| `DBA` | DBA | 2000.00 | 15% | 25% |
+| `TESTER` | TESTADOR | 2000.00 | 15% | 25% |
+| `MANAGER` | GERENTE | 5000.00 | 20% | 30% |
+
+The calculation is `net = baseSalary × (1 − discount)`. Equality belongs to the
+higher-discount bracket: a developer with a base salary of `3000.00` receives
+`2400.00`; one with `2999.99` receives `2699.99`.
+
+All amounts and rates use `BigDecimal` constructed from decimal strings. The
+threshold comparison and multiplication use the original, unrounded amount.
+Because the assignment does not specify rounding, this implementation rounds
+only the final net salary to **two decimal places with `RoundingMode.HALF_UP`**.
+Base salaries with additional decimal places are accepted. For example, a DBA
+with `0.10` receives `0.09`, and a developer with `2999.999` remains below the
+threshold and receives `2700.00` after final rounding.
+
+Zero base salary is valid. A missing employee, role, or salary, or a negative
+salary, throws `IllegalArgumentException`.
+
+```java
+import java.math.BigDecimal;
+import com.johnpetros.tdd.salary.Employee;
+import com.johnpetros.tdd.salary.Role;
+import com.johnpetros.tdd.salary.SalaryCalculator;
+
+Employee employee = new Employee(
+    "Ana Silva", "ana@example.com", new BigDecimal("3000.00"), Role.DEVELOPER
+);
+BigDecimal netSalary = new SalaryCalculator().calculate(employee); // 2400.00
+```
+
+### Exercise 3 test cases
+
+`SalaryCalculatorTest` contains **51 cases**. Expected net salaries are supplied
+explicitly through JUnit `@CsvSource`, and assertions check both the amount and
+the required two-decimal scale.
+
+| Area | Cases | What is verified |
+| --- | --- | --- |
+| Developer | 8 | Initial example, zero, small salary, and values below, at, and above 3000 |
+| DBA | 7 | Zero, small salary, and values below, at, and above 2000 |
+| Tester | 7 | The same required brackets as DBA, independently exercised |
+| Manager | 7 | Zero, small salary, and values below, at, and above 5000 |
+| Rounding and precision | 12 | Half-cent rounding, extra input precision, and comparison before rounding |
+| Large amounts | 4 | One large exact decimal calculation for each role |
+| Invalid input | 6 | Missing employee, role, or salary, and three negative amounts |
+
+Every role's threshold is tested with different decimal scales, such as
+`3000` and `3000.00`, which represent the same amount.
+
+### Exercise 3 code coverage evidence
+
+Measured on **2026-10-29** using `mvn clean verify`, JUnit 5.13.4 and JaCoCo 0.8.14:
+
+```text
+SalaryCalculatorTest: 51 cases, 0 failures, 0 errors
+Full suite: 153 cases, 0 failures, 0 errors
+All coverage checks have been met.
+BUILD SUCCESS
+```
+
+| Production class | Instructions | Lines | Branches | Methods |
+| --- | --- | --- | --- | --- |
+| `SalaryCalculator` | 46/46 (100%) | 9/9 (100%) | 8/8 (100%) | 2/2 (100%) |
+| `Role` | 73/73 (100%) | 11/11 (100%) | 2/2 (100%) | 3/3 (100%) |
+| `Employee` | 15/15 (100%) | 1/1 (100%) | N/A (no branches) | 1/1 (100%) |
+| **Total** | **134/134 (100%)** | **21/21 (100%)** | **10/10 (100%)** | **6/6 (100%)** |
+
+- [JaCoCo CSV snapshot](docs/coverage/exercise-3/jacoco.csv)
+- [JaCoCo XML snapshot](docs/coverage/exercise-3/jacoco.xml)
+- [Exercise 3 JUnit execution summary](docs/coverage/exercise-3/test-results.txt)
+- [Full build verification summary](docs/coverage/exercise-3/verification.txt)
+
+The snapshots select the `com.johnpetros.tdd.salary` package from the full
+build's report. To inspect it visually, run `mvn clean verify`, open
+`target/site/jacoco/index.html`, and select that package. Coverage is measured
+over the complete test suite, with no production-code exclusions.
 
 ## TDD process
 
@@ -249,6 +350,16 @@ null-person handling with accumulated errors. Email validation was then extracte
 into a private helper, and the complete test suite and coverage checks reran
 successfully. See the [Exercise 2 cycle results](docs/tdd-person-cycles.md).
 
+### Exercise 3
+
+Six measured Red → Green cycles introduced the salary calculator skeleton,
+developer threshold, DBA discounts, tester discounts, manager discounts, and
+input validation. Precision and large-amount regression cases accompanied the
+last cycle. The final refactoring moved the role-specific thresholds and
+discounts into the `Role` enum, replacing repeated calculation branches with
+one shared decimal formula. All 153 cases and coverage checks then passed.
+See the [Exercise 3 cycle results](docs/tdd-salary-cycles.md).
+
 ## Source layout
 
 ```text
@@ -263,11 +374,19 @@ src/main/java/com/johnpetros/tdd/person/
     PersonDAO.java
 src/test/java/com/johnpetros/tdd/person/
     PersonDAOTest.java
+src/main/java/com/johnpetros/tdd/salary/
+    Employee.java
+    Role.java
+    SalaryCalculator.java
+src/test/java/com/johnpetros/tdd/salary/
+    SalaryCalculatorTest.java
 docs/
     tdd-cycles.md
     tdd-person-cycles.md
+    tdd-salary-cycles.md
     coverage/exercise-1/
     coverage/exercise-2/
+    coverage/exercise-3/
 pom.xml
 ```
 

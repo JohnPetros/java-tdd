@@ -4,6 +4,13 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class SalaryCalculator {
+    /**
+     * Applies the role's discount to the entire base salary and rounds the final
+     * result to two decimal places using HALF_UP.
+     *
+     * @throws IllegalArgumentException if the employee, role, or base salary is
+     *         missing, or the base salary is negative
+     */
     public BigDecimal calculate(Employee employee) {
         if (employee == null) {
             throw new IllegalArgumentException("Employee must be provided.");
@@ -14,16 +21,7 @@ public class SalaryCalculator {
         if (employee.baseSalary() == null || employee.baseSalary().signum() < 0) {
             throw new IllegalArgumentException("Base salary must be provided and nonnegative.");
         }
-        BigDecimal retainedFraction = employee.baseSalary().compareTo(new BigDecimal("3000")) >= 0
-            ? new BigDecimal("0.80") : new BigDecimal("0.90");
-        if (employee.role() == Role.DBA || employee.role() == Role.TESTER) {
-            retainedFraction = employee.baseSalary().compareTo(new BigDecimal("2000")) >= 0
-                ? new BigDecimal("0.75") : new BigDecimal("0.85");
-        }
-        if (employee.role() == Role.MANAGER) {
-            retainedFraction = employee.baseSalary().compareTo(new BigDecimal("5000")) >= 0
-                ? new BigDecimal("0.70") : new BigDecimal("0.80");
-        }
+        BigDecimal retainedFraction = BigDecimal.ONE.subtract(employee.role().discountFor(employee.baseSalary()));
         return employee.baseSalary().multiply(retainedFraction).setScale(2, RoundingMode.HALF_UP);
     }
 }
