@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.johnpetros.tdd.person.PersonDAOTest
+-------------------------------------------------------------------------------
+Tests run: 64, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.218 s -- in com.johnpetros.tdd.person.PersonDAOTest

@@ -6,7 +6,7 @@
     <groupId>com.johnpetros</groupId>
     <artifactId>java-tdd</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>Java TDD - Triangle classification</name>
+    <name>Java TDD - JUnit exercises</name>
 
     <properties>
         <maven.compiler.release>21</maven.compiler.release>

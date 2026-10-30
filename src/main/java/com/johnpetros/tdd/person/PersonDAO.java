@@ -12,6 +12,10 @@ public class PersonDAO {
         "[^\\s@]+@[^\\s@.]+(?:\\.[^\\s@.]+)+", Pattern.UNICODE_CHARACTER_CLASS
     );
 
+    /**
+     * Returns all validation errors in name, age, then email order.
+     * An empty list means the person satisfies the exercise's inclusion rules.
+     */
     public List<String> isValidToInclude(Person person) {
         List<String> errors = new ArrayList<>();
         if (person == null) {
@@ -24,16 +28,20 @@ public class PersonDAO {
         if (person.age() < 1 || person.age() > 200) {
             errors.add("Age must be between 1 and 200 inclusive.");
         }
-        if (person.emails() == null || person.emails().isEmpty()) {
+        validateEmails(person.emails(), errors);
+        return errors;
+    }
+
+    private void validateEmails(List<Email> emails, List<String> errors) {
+        if (emails == null || emails.isEmpty()) {
             errors.add("Person must have at least one email.");
-        } else {
-            for (int i = 0; i < person.emails().size(); i++) {
-                Email email = person.emails().get(i);
-                if (email == null || email.name() == null || !EMAIL_PATTERN.matcher(email.name()).matches()) {
-                    errors.add("Email at position " + (i + 1) + " must match local@domain.suffix.");
-                }
+            return;
+        }
+        for (int i = 0; i < emails.size(); i++) {
+            Email email = emails.get(i);
+            if (email == null || email.name() == null || !EMAIL_PATTERN.matcher(email.name()).matches()) {
+                errors.add("Email at position " + (i + 1) + " must match local@domain.suffix.");
             }
         }
-        return errors;
     }
 }
