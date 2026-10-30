@@ -1,0 +1,7 @@
+Command: mvn -B clean verify
+[INFO] Tests run: 38, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.391 s -- in com.johnpetros.tdd.triangle.TriangleClassifierTest
+[INFO] Tests run: 38, Failures: 0, Errors: 0, Skipped: 0
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS
+[INFO] Total time:  3.413 s
+[INFO] Finished at: 2026-10-29T21:37:53-03:00
