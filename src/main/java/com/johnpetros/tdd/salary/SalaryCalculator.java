@@ -11,6 +11,10 @@ public class SalaryCalculator {
             retainedFraction = employee.baseSalary().compareTo(new BigDecimal("2000")) >= 0
                 ? new BigDecimal("0.75") : new BigDecimal("0.85");
         }
+        if (employee.role() == Role.MANAGER) {
+            retainedFraction = employee.baseSalary().compareTo(new BigDecimal("5000")) >= 0
+                ? new BigDecimal("0.70") : new BigDecimal("0.80");
+        }
         return employee.baseSalary().multiply(retainedFraction).setScale(2, RoundingMode.HALF_UP);
     }
 }
