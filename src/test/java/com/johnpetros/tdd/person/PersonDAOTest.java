@@ -56,6 +56,29 @@ class PersonDAOTest {
         );
     }
 
+    @Test
+    void rejectsMissingEmailAssociation() {
+        Person person = new Person(1, "Ana Silva", 30, null);
+
+        assertEquals(List.of("Person must have at least one email."), dao.isValidToInclude(person));
+    }
+
+    @Test
+    void rejectsEmptyEmailAssociation() {
+        Person person = new Person(1, "Ana Silva", 30, List.of());
+
+        assertEquals(List.of("Person must have at least one email."), dao.isValidToInclude(person));
+    }
+
+    @Test
+    void acceptsMultipleAssociatedEmails() {
+        Person person = new Person(1, "Ana Silva", 30, List.of(
+            new Email(1, "ana@example.com"), new Email(2, "ana@school.edu")
+        ));
+
+        assertEquals(List.of(), dao.isValidToInclude(person));
+    }
+
     private Person personWith(String name, int age) {
         return new Person(1, name, age, List.of(new Email(1, "ana@example.com")));
     }

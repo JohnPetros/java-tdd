@@ -17,6 +17,9 @@ public class PersonDAO {
         if (person.age() < 1 || person.age() > 200) {
             errors.add("Age must be between 1 and 200 inclusive.");
         }
+        if (person.emails() == null || person.emails().isEmpty()) {
+            errors.add("Person must have at least one email.");
+        }
         return errors;
     }
 }
