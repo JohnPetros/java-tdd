@@ -1,5 +1,6 @@
 package com.johnpetros.tdd.triangle;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -25,5 +26,22 @@ class TriangleClassifierTest {
     @CsvSource({"5, 5, 3", "5, 3, 5", "3, 5, 5"})
     void classifiesEveryIsoscelesPermutation(int a, int b, int c) {
         assertEquals(TriangleType.ISOSCELES, classifier.classify(a, b, c));
+    }
+
+    @ParameterizedTest(name = "({0}, {1}, {2}) has a zero side")
+    @CsvSource({"0, 3, 3", "3, 0, 3", "3, 3, 0"})
+    void rejectsZeroInAnyPosition(int a, int b, int c) {
+        assertThrows(IllegalArgumentException.class, () -> classifier.classify(a, b, c));
+    }
+
+    @ParameterizedTest(name = "({0}, {1}, {2}) has a negative side")
+    @CsvSource({"-1, 3, 3", "3, -1, 3", "3, 3, -1"})
+    void rejectsNegativeInAnyPosition(int a, int b, int c) {
+        assertThrows(IllegalArgumentException.class, () -> classifier.classify(a, b, c));
+    }
+
+    @Test
+    void rejectsThreeZeroSides() {
+        assertThrows(IllegalArgumentException.class, () -> classifier.classify(0, 0, 0));
     }
 }
