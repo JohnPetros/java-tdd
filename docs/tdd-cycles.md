@@ -1,26 +1,28 @@
-# Recorded TDD cycles — Exercise 1
+# Registro dos ciclos de TDD — Exercício 1
 
-These summaries come from the actual Maven test runs during development on
-2026-10-29. Each Red run happened before the corresponding production change;
-each Green run reran the whole suite with `mvn -B test`.
+Estes resumos foram obtidos das execuções reais dos testes com Maven durante o
+desenvolvimento em 29/10/2026. Cada execução Red ocorreu antes da alteração
+correspondente no código de produção; cada execução Green executou novamente
+toda a suíte com `mvn -B test`.
 
-| Behavior added | Red (expected build failure) | Green (successful build) |
+| Comportamento adicionado | Red (falha esperada na construção) | Green (construção bem-sucedida) |
 | --- | --- | --- |
-| 1. Scalene classification | 6 cases, 0 failures, 6 errors | 6 cases, 0 failures, 0 errors |
-| 2. Equilateral classification | 8 cases, 2 failures, 0 errors | 8 cases, 0 failures, 0 errors |
-| 3. Isosceles permutations | 11 cases, 3 failures, 0 errors | 11 cases, 0 failures, 0 errors |
-| 4. Zero and negative sides | 18 cases, 7 failures, 0 errors | 18 cases, 0 failures, 0 errors |
-| 5. Triangle inequality permutations | 30 cases, 12 failures, 0 errors | 30 cases, 0 failures, 0 errors |
-| 6. Integer overflow boundaries | 38 cases, 0 failures, 5 errors | 38 cases, 0 failures, 0 errors |
+| 1. Classificação de escaleno | 6 casos, 0 falhas, 6 erros | 6 casos, 0 falhas, 0 erros |
+| 2. Classificação de equilátero | 8 casos, 2 falhas, 0 erros | 8 casos, 0 falhas, 0 erros |
+| 3. Permutações de isósceles | 11 casos, 3 falhas, 0 erros | 11 casos, 0 falhas, 0 erros |
+| 4. Lados com valor zero ou negativo | 18 casos, 7 falhas, 0 erros | 18 casos, 0 falhas, 0 erros |
+| 5. Permutações da desigualdade triangular | 30 casos, 12 falhas, 0 erros | 30 casos, 0 falhas, 0 erros |
+| 6. Limites de inteiros e prevenção de estouro | 38 casos, 0 falhas, 5 erros | 38 casos, 0 falhas, 0 erros |
 
-Cycle 1 starts with `UnsupportedOperationException` in the class skeleton.
-Cycle 6 fails with exceptions because overflowing `int` sums reject valid
-triangles; promoting the sums to `long` resolves those failures.
+O ciclo 1 começa com `UnsupportedOperationException` no esqueleto da classe.
+O ciclo 6 apresenta exceções porque o estouro nas somas de valores `int` faz
+triângulos válidos serem rejeitados; promover as somas para `long` resolve
+essas falhas.
 
-After the six cycles, duplicated rejection assertions were extracted into
-`assertInvalidTriangle`. The final `mvn -B clean verify` run passed all 38 cases
-and both the line and branch coverage checks. Its evidence is in
-[coverage/exercise-1](coverage/exercise-1/).
+Após os seis ciclos, as asserções repetidas de rejeição foram extraídas para
+`assertInvalidTriangle`. A execução final de `mvn -B clean verify` passou nos
+38 casos e nas verificações de cobertura de linhas e ramificações. As evidências
+estão em [coverage/exercise-1](coverage/exercise-1/).
 
-The Git history records the initial skeleton, each Green implementation, and
-the final refactoring/documentation step.
+O histórico do Git registra o esqueleto inicial, cada implementação que atingiu
+a etapa Green e a etapa final de refatoração e documentação.

@@ -13,8 +13,8 @@ public class PersonDAO {
     );
 
     /**
-     * Returns all validation errors in name, age, then email order.
-     * An empty list means the person satisfies the exercise's inclusion rules.
+     * Retorna todos os erros de validação na ordem: nome, idade e e-mails.
+     * Uma lista vazia indica que a pessoa atende às regras de inclusão do exercício.
      */
     public List<String> isValidToInclude(Person person) {
         List<String> errors = new ArrayList<>();

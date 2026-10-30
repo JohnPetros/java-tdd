@@ -1,36 +1,40 @@
-# Recorded TDD cycles — Exercise 3
+# Registro dos ciclos de TDD — Exercício 3
 
-These results come from the actual `mvn -B test` runs during development on
-2026-10-29. Counts include the 102 existing cases from Exercises 1 and 2, which
-stayed green throughout. Each Red run happened before its corresponding
-production change; every Green run reran all exercises.
+Estes resultados foram obtidos das execuções reais de `mvn -B test` durante o
+desenvolvimento em 29/10/2026. As contagens incluem os 102 casos existentes dos
+Exercícios 1 e 2, que continuaram passando durante todo o processo. Cada
+execução Red ocorreu antes da alteração correspondente no código de produção;
+cada execução Green executou novamente todos os exercícios.
 
-| Behavior added | Red (expected build failure) | Green (successful build) |
+| Comportamento adicionado | Red (falha esperada na construção) | Green (construção bem-sucedida) |
 | --- | --- | --- |
-| 1. Initial developer example | 103 cases, 0 failures, 1 error | 103 cases, 0 failures, 0 errors |
-| 2. Developer threshold and decimal scales | 110 cases, 4 failures, 0 errors | 110 cases, 0 failures, 0 errors |
-| 3. DBA discounts | 117 cases, 5 failures, 0 errors | 117 cases, 0 failures, 0 errors |
-| 4. Tester discounts | 124 cases, 5 failures, 0 errors | 124 cases, 0 failures, 0 errors |
-| 5. Manager discounts | 131 cases, 4 failures, 0 errors | 131 cases, 0 failures, 0 errors |
-| 6. Input validation, precision, and large amounts | 153 cases, 6 failures, 0 errors | 153 cases, 0 failures, 0 errors |
+| 1. Exemplo inicial de desenvolvedor | 103 casos, 0 falhas, 1 erro | 103 casos, 0 falhas, 0 erros |
+| 2. Limite salarial de desenvolvedor e escalas decimais | 110 casos, 4 falhas, 0 erros | 110 casos, 0 falhas, 0 erros |
+| 3. Descontos de DBA | 117 casos, 5 falhas, 0 erros | 117 casos, 0 falhas, 0 erros |
+| 4. Descontos de testador | 124 casos, 5 falhas, 0 erros | 124 casos, 0 falhas, 0 erros |
+| 5. Descontos de gerente | 131 casos, 4 falhas, 0 erros | 131 casos, 0 falhas, 0 erros |
+| 6. Validação de entradas, precisão e valores elevados | 153 casos, 6 falhas, 0 erros | 153 casos, 0 falhas, 0 erros |
 
-The skeleton initially throws `UnsupportedOperationException`. Subsequent Red
-runs demonstrate missing salary brackets and input guards. The last cycle adds
-six failing invalid-input cases together with precision and large-amount
-regressions that already pass.
+O esqueleto inicialmente lança `UnsupportedOperationException`. As execuções
+Red seguintes demonstram a ausência das faixas de desconto e das verificações
+de entrada. O último ciclo adiciona seis casos de entrada inválida que falham,
+junto com casos de regressão de precisão e valores elevados que já passam.
 
-After the six cycles, repeated role-specific conditions were replaced with
-thresholds and discounts stored in `Role`. The calculator now validates input,
-selects the role's discount, and applies one shared `BigDecimal` formula. This
-refactoring preserves the tested behavior, including comparison before rounding
-and final two-decimal `HALF_UP` rounding.
+Após os seis ciclos, as condições repetidas por cargo foram substituídas por
+limites e descontos armazenados em `Role`. A calculadora passa a validar as
+entradas, selecionar o desconto do cargo e aplicar uma única fórmula com
+`BigDecimal`. Essa refatoração preserva o comportamento testado, incluindo a
+comparação antes do arredondamento e o arredondamento final com `HALF_UP`
+para duas casas decimais.
 
-The final `mvn -B clean verify` run passes **153 cases**, including **51 for
-Exercise 3**, and the **100% line and branch coverage checks**, without exclusions.
+A execução final de `mvn -B clean verify` passa nos **153 casos**, incluindo
+**51 do Exercício 3**, e nas verificações de **100% de cobertura de linhas e
+ramificações**, sem exclusões.
 
-Evidence: [Exercise 3 coverage and execution summaries](coverage/exercise-3/).
-The JaCoCo CSV and XML snapshots select the salary package from the full build's
-report. Their coverage counters are copied directly from that package.
+Evidências: [cobertura e resumos de execução do Exercício 3](coverage/exercise-3/).
+Os arquivos CSV e XML do JaCoCo contêm o pacote de salários extraído do relatório
+da construção completa. Seus contadores de cobertura foram copiados diretamente
+desse pacote.
 
-Git history records the skeleton, each Green implementation, and the final
-refactoring and documentation step.
+O histórico do Git registra o esqueleto, cada implementação que atingiu a etapa
+Green e a etapa final de refatoração e documentação.

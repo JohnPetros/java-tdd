@@ -5,11 +5,11 @@ import java.math.RoundingMode;
 
 public class SalaryCalculator {
     /**
-     * Applies the role's discount to the entire base salary and rounds the final
-     * result to two decimal places using HALF_UP.
+     * Aplica o desconto do cargo sobre todo o salário-base e arredonda o resultado
+     * final para duas casas decimais usando HALF_UP.
      *
-     * @throws IllegalArgumentException if the employee, role, or base salary is
-     *         missing, or the base salary is negative
+     * @throws IllegalArgumentException se o funcionário, o cargo ou o salário-base
+     *         não for informado, ou se o salário-base for negativo
      */
     public BigDecimal calculate(Employee employee) {
         if (employee == null) {
