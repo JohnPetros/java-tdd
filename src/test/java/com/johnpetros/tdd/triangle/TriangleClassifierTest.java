@@ -44,4 +44,16 @@ class TriangleClassifierTest {
     void rejectsThreeZeroSides() {
         assertThrows(IllegalArgumentException.class, () -> classifier.classify(0, 0, 0));
     }
+
+    @ParameterizedTest(name = "({0}, {1}, {2}) has two sides summing to the third")
+    @CsvSource({"2, 3, 5", "2, 5, 3", "3, 2, 5", "3, 5, 2", "5, 2, 3", "5, 3, 2"})
+    void rejectsEveryDegeneratePermutation(int a, int b, int c) {
+        assertThrows(IllegalArgumentException.class, () -> classifier.classify(a, b, c));
+    }
+
+    @ParameterizedTest(name = "({0}, {1}, {2}) has two sides summing below the third")
+    @CsvSource({"2, 3, 6", "2, 6, 3", "3, 2, 6", "3, 6, 2", "6, 2, 3", "6, 3, 2"})
+    void rejectsEveryTriangleInequalityViolationPermutation(int a, int b, int c) {
+        assertThrows(IllegalArgumentException.class, () -> classifier.classify(a, b, c));
+    }
 }
