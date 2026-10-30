@@ -5,6 +5,15 @@ import java.math.RoundingMode;
 
 public class SalaryCalculator {
     public BigDecimal calculate(Employee employee) {
+        if (employee == null) {
+            throw new IllegalArgumentException("Employee must be provided.");
+        }
+        if (employee.role() == null) {
+            throw new IllegalArgumentException("Employee role must be provided.");
+        }
+        if (employee.baseSalary() == null || employee.baseSalary().signum() < 0) {
+            throw new IllegalArgumentException("Base salary must be provided and nonnegative.");
+        }
         BigDecimal retainedFraction = employee.baseSalary().compareTo(new BigDecimal("3000")) >= 0
             ? new BigDecimal("0.80") : new BigDecimal("0.90");
         if (employee.role() == Role.DBA || employee.role() == Role.TESTER) {
