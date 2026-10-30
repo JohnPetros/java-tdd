@@ -26,7 +26,14 @@ class SalaryCalculatorTest {
         "DEVELOPER, 3000, 2400.00",
         "DEVELOPER, 3000.00, 2400.00",
         "DEVELOPER, 3000.01, 2400.01",
-        "DEVELOPER, 4000.00, 3200.00"
+        "DEVELOPER, 4000.00, 3200.00",
+        "DBA, 0.00, 0.00",
+        "DBA, 0.01, 0.01",
+        "DBA, 1999.99, 1699.99",
+        "DBA, 2000, 1500.00",
+        "DBA, 2000.00, 1500.00",
+        "DBA, 2000.01, 1500.01",
+        "DBA, 3000.00, 2250.00"
     })
     void calculatesNetSalaryForEachRoleAndThreshold(Role role, BigDecimal baseSalary, BigDecimal expected) {
         Employee employee = new Employee("Ana Silva", "ana@example.com", baseSalary, role);
